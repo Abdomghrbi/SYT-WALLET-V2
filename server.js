@@ -10,7 +10,11 @@ const referralRoutes = require('./routes/referrals');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://syt-wallet-v2-5lt8.vercel.app', 'https://*.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'X-Telegram-Init-Data']
+}));
 app.use(express.json());
 
 // المسارات
