@@ -10,7 +10,7 @@ const referralRoutes = require('./routes/referrals');
 
 const app = express();
 
-// ✅ CORS قبل كل شيء - يسمح للجميع مؤقتاً
+// CORS
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -18,9 +18,7 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ معالجة preflight requests
 app.options('*', cors());
-
 app.use(express.json());
 
 // المسارات
@@ -35,7 +33,13 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', time: new Date() });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+// ✅ للتشغيل المحلي فقط
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
+// ✅ تصدير للـ Vercel Serverless
+module.exports = app;
