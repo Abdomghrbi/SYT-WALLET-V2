@@ -10,11 +10,17 @@ const referralRoutes = require('./routes/referrals');
 
 const app = express();
 
+// ✅ CORS قبل كل شيء - يسمح للجميع مؤقتاً
 app.use(cors({
-  origin: ['https://syt-wallet-v2-5lt8.vercel.app', 'https://*.vercel.app'],
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'X-Telegram-Init-Data']
+  allowedHeaders: ['Content-Type', 'X-Telegram-Init-Data'],
+  credentials: true
 }));
+
+// ✅ معالجة preflight requests
+app.options('*', cors());
+
 app.use(express.json());
 
 // المسارات
