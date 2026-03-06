@@ -1,8 +1,10 @@
+const crypto = require('crypto');
+
 const verifyTelegram = (req, res, next) => {
   const initData = req.headers['x-telegram-init-data'];
   
   if (!initData) {
-    return res.status(401).json({ error: 'Missing initData' });
+    return res.status(401).json({ error: 'Missing Telegram data' });
   }
 
   try {
@@ -32,6 +34,9 @@ const verifyTelegram = (req, res, next) => {
     next();
 
   } catch (error) {
-    return res.status(401).json({ error: 'Auth failed' });
+    console.error('Auth error:', error);
+    return res.status(401).json({ error: 'Authentication failed' });
   }
 };
+
+module.exports = verifyTelegram;
