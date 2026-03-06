@@ -6,7 +6,29 @@ const verifyTelegram = require('../middleware/auth');
 // ✅ تسجيل الدخول / إنشاء محفظة
 router.post('/login', verifyTelegram, async (req, res) => {
   const { id, username, first_name, last_name } = req.telegramUser;
+// تحديثات قاعدة البيانات /  إنشاء المحفظة الجديدة
+if (!wallet) {
+  const { data: newWallet, error: createError } = await supabase
+    .from('wallets')
+    .insert({
+      telegram_id: id,
+      balance: 0,
+      total_earned: 0
+    })
+    .select()
+    .single();
 
+  if (createError) throw createError;
+  wallet = newWallet;
+
+  // ✅ تسجيل الإحالة إذا كان هناك referral_code في initData
+  
+  // إنشاء سجل المكافآت اليومية
+  await supabase.from('daily_rewards').insert({
+    wallet_id: wallet.id
+  });
+}
+  
   try {
     // البحث عن المحفظة
     let { data: wallet, error } = await supabase
