@@ -2,11 +2,19 @@ require('dotenv').config();
 
 const { Telegraf } = require('telegraf');
 const axios = require('axios');
+const http = require('http');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const API_URL = process.env.API_URL || 'https://syt-wallet-backend.onrender.com';
 const MINI_APP_URL = process.env.MINI_APP_URL;
+
+// ✅ Port وهمي لـ Render
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('Bot is running');
+}).listen(PORT, () => console.log(`Port ${PORT} open`));
 
 // أمر /start
 bot.start(async (ctx) => {
