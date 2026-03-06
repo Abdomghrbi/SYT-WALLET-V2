@@ -3,7 +3,7 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const verifyTelegram = require('../middleware/auth');
 
-// تسجيل الدخول / إنشاء محفظة
+// ✅ تسجيل الدخول / إنشاء محفظة
 router.post('/login', verifyTelegram, async (req, res) => {
   const { id, username, first_name, last_name } = req.telegramUser;
 
