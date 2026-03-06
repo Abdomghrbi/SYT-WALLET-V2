@@ -9,12 +9,24 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const API_URL = process.env.API_URL || 'https://syt-wallet-v2.onrender.com';
 const MINI_APP_URL = process.env.MINI_APP_URL;
 
-// Port وهمي للـ Render
+// ✅ إنشاء server مع routes
+const server = http.createServer((req, res) => {
+  if (req.url === '/') {
+    res.writeHead(200);
+    res.end('SYT Wallet Bot is running!');
+  } else if (req.url === '/health') {
+    res.writeHead(200);
+    res.end(JSON.stringify({ status: 'OK', time: new Date() }));
+  } else {
+    res.writeHead(404);
+    res.end('Not found');
+  }
+});
+
 const PORT = process.env.PORT || 3000;
-http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('Bot is running');
-}).listen(PORT, () => console.log(`Port ${PORT} open`));
+server.listen(PORT, () => {
+  console.log(`🚀 Server on port ${PORT}`);
+});
 
 // ✅ /start - تسجيل إحالة + فتح Mini App
 bot.start(async (ctx) => {
@@ -106,7 +118,7 @@ bot.help((ctx) => {
   ctx.reply('/start - فتح المحفظة');
 });
 
-// ✅ تشغيل بالـ Polling (بدون Webhook)
+// ✅ تشغيل البوت
 bot.launch()
   .then(() => console.log('🤖 Bot started successfully'))
   .catch(err => console.error('❌ Bot error:', err));
