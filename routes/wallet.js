@@ -56,7 +56,10 @@ router.post('/transfer', verifyTelegram, async (req, res) => {
     if (fromError || !fromWallet) {
       return res.status(404).json({ error: 'Sender wallet not found' });
     }
-
+    // منع التحويل لنفس المحفظة
+if (fromWallet.wallet_address === to_address) {
+  return res.status(400).json({ error: 'لا يمكن التحويل لنفس المحفظة' });
+}
     if (fromWallet.balance < amount) {
       return res.status(400).json({ error: 'Insufficient balance' });
     }
