@@ -6,13 +6,13 @@ const axios = require('axios');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const API_URL = process.env.API_URL || 'https://syt-wallet-v2.vercel.app';
+const MINI_APP_URL = process.env.MINI_APP_URL || 'https://syt-wallet-frontend.vercel.app';
 
 // أمر /start
 bot.start(async (ctx) => {
-  const startPayload = ctx.payload; // كود الإحالة
+  const startPayload = ctx.payload;
   
   if (startPayload) {
-    // تسجيل إحالة
     try {
       await axios.post(`${API_URL}/api/referrals/register`, {
         new_user_id: ctx.from.id,
@@ -23,14 +23,12 @@ bot.start(async (ctx) => {
     }
   }
   
-  // فتح Mini App
   await ctx.reply(
-    '👋 مرحباً بك في SYT Wallet!\n\n' +
-    'اضغط الزر أدناه لفتح محفظتك:',
+    '👋 مرحباً بك في SYT Wallet!\n\nاضغط الزر أدناه لفتح محفظتك:',
     {
       reply_markup: {
         inline_keyboard: [[
-          { text: '💼 فتح المحفظة', web_app: { url: process.env.MINI_APP_URL } }
+          { text: '💼 فتح المحفظة', web_app: { url: MINI_APP_URL } }
         ]]
       }
     }
@@ -39,18 +37,13 @@ bot.start(async (ctx) => {
 
 // أمر /help
 bot.help((ctx) => {
-  ctx.reply(
-    '📚 الأوامر المتاحة:\n\n' +
-    '/start - فتح المحفظة\n' +
-    '/help - المساعدة'
-  );
+  ctx.reply('📚 /start - فتح المحفظة');
 });
 
-// تشغيل البوت
+// تشغيل
 bot.launch()
-  .then(() => console.log('🤖 Bot started'))
-  .catch(err => console.error('Bot error:', err));
+  .then(() => console.log('🤖 Bot started successfully'))
+  .catch(err => console.error('❌ Bot error:', err));
 
-// إيقاف نظيف
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
